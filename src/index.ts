@@ -7,7 +7,7 @@ import {
   reset,
   updateDuration,
   clear,
-  loadFrames,
+  load,
   getPreviousFrame,
   getNextFrame,
   setCursor,
@@ -43,7 +43,7 @@ export const usePlayback = <T>(
       () => ({
         clear: () => dispatch(clear()),
         load: (frames: T[], duration: number, autoplay: boolean = false) =>
-          dispatch(loadFrames([frames, duration, autoplay])),
+          dispatch(load([frames, duration, autoplay])),
         getPrevFrame: () => dispatch(getPreviousFrame()),
         getNextFrame: () => dispatch(getNextFrame()),
         play: () => dispatch(play()),
@@ -55,7 +55,7 @@ export const usePlayback = <T>(
       [
         dispatch,
         clear,
-        loadFrames,
+        load,
         getPreviousFrame,
         getNextFrame,
         play,

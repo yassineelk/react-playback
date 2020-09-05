@@ -4,14 +4,14 @@ export type Action<T> =
   | Reset
   | UpdateDuration
   | Clear
-  | LoadFrames<T>
+  | Load<T>
   | GetPreviousFrame
   | GetNextFrame
   | SetCursor
   | SetLoop;
 
 export enum ActionType {
-  LOAD_FRAMES,
+  LOAD,
   GET_PREVIOUS_FRAME,
   GET_NEXT_FRAME,
   PLAY,
@@ -44,8 +44,8 @@ interface Clear {
   type: ActionType.CLEAR;
 }
 
-interface LoadFrames<T> {
-  type: ActionType.LOAD_FRAMES;
+interface Load<T> {
+  type: ActionType.LOAD;
   payload: [T[], number, boolean];
 }
 
@@ -88,10 +88,8 @@ export const clear = (): Clear => ({
   type: ActionType.CLEAR,
 });
 
-export const loadFrames = <T>(
-  payload: [T[], number, boolean]
-): LoadFrames<T> => ({
-  type: ActionType.LOAD_FRAMES,
+export const load = <T>(payload: [T[], number, boolean]): Load<T> => ({
+  type: ActionType.LOAD,
   payload,
 });
 

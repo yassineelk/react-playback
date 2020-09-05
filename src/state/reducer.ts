@@ -89,17 +89,26 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
       };
       break;
 
-    case ActionType.LOAD_FRAMES:
-      newState = {
-        ...newState,
-        frames: action.payload[0],
-        duration: action.payload[1],
-        autoplay: action.payload[2],
-        playing: false,
-        cursor: 0,
-        startTime: null,
-        startCursor: null,
-      };
+    case ActionType.LOAD:
+      newState = action.payload[2]
+        ? {
+            ...newState,
+            frames: action.payload[0],
+            duration: action.payload[1],
+            playing: true,
+            cursor: 0,
+            startTime: Date.now(),
+            startCursor: 0,
+          }
+        : {
+            ...newState,
+            frames: action.payload[0],
+            duration: action.payload[1],
+            playing: false,
+            cursor: 0,
+            startTime: null,
+            startCursor: null,
+          };
       break;
 
     case ActionType.SET_LOOP:
