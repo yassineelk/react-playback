@@ -1,4 +1,4 @@
-import { produce } from "immer";
+import { produce, current } from "immer";
 import { Action, ActionType } from "./actions";
 import { Store } from "./state";
 
@@ -7,13 +7,17 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
 
   switch (action.type) {
     case ActionType.PLAY:
-      if (!state.playing)
+      if (!state.playing) {
+        const cursor =
+          state.cursor === state.frames.length - 1 ? 0 : state.cursor;
         newState = {
           ...newState,
+          cursor,
           playing: true,
           startCursor: state.cursor,
           startTime: Date.now(),
         };
+      }
       break;
 
     case ActionType.PAUSE:

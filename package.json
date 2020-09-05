@@ -1,6 +1,6 @@
 {
   "name": "react-playback",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Playback an array of states like a video, control the animation duration, or fps while normalizing the result across hardware to make the duration match when render times differs from one device to another",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
