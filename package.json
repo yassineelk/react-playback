@@ -1,0 +1,31 @@
+{
+  "name": "react-playback",
+  "version": "1.0.0",
+  "description": "Playback an array of states like a video, control the animation duration, or fps while normalizing the result across hardware to make the duration match when render times differs from one device to another",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "publish": "tsc && npm publish"
+  },
+  "keywords": [
+    "react",
+    "playback"
+  ],
+  "author": "yassineelk",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:yassineelk/react-playback.git"
+  },
+  "dependencies": {
+    "immer": "^7.0.8",
+    "react": "^16.13.1"
+  },
+  "homepage": "https://github.com:yassineelk/react-playback#readme",
+  "bugs": "https://github.com:yassineelk/react-playback/issues",
+  "devDependencies": {
+    "@types/react": "^16.9.49",
+    "typescript": "^4.0.2"
+  }
+}
