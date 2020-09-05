@@ -2,7 +2,6 @@ export type Store<T> = {
   duration: number;
   frames: T[];
   cursor: number;
-  autoplay: boolean;
   loop: boolean;
 } & (
   | { playing: true; startTime: number; startCursor: number }
@@ -13,13 +12,23 @@ export const getDefaultState = <T>(
   frames: T[] = [],
   duration: number,
   autoplay: boolean = false
-): Store<T> => ({
-  duration,
-  frames,
-  cursor: 0,
-  playing: false,
-  startTime: null,
-  startCursor: null,
-  autoplay,
-  loop: false,
-});
+): Store<T> =>
+  autoplay
+    ? {
+        duration,
+        frames,
+        cursor: 0,
+        playing: true,
+        startTime: Date.now(),
+        startCursor: 0,
+        loop: false,
+      }
+    : {
+        duration,
+        frames,
+        cursor: 0,
+        playing: false,
+        startTime: null,
+        startCursor: null,
+        loop: false,
+      };
