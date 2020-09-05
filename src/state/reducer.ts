@@ -43,12 +43,21 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
       if (!state.playing) break;
       newState = { ...newState, cursor: action.payload };
       if (newState.cursor >= newState.frames.length - 1) {
-        newState = {
-          ...newState,
-          playing: false,
-          startTime: null,
-          startCursor: null,
-        };
+        newState = state.loop
+          ? {
+              ...newState,
+              playing: true,
+              startTime: Date.now(),
+              startCursor: action.payload % newState.frames.length,
+              cursor: action.payload % newState.frames.length,
+            }
+          : {
+              ...newState,
+              playing: false,
+              startTime: null,
+              startCursor: null,
+              cursor: newState.frames.length - 1,
+            };
       }
       break;
 
@@ -59,7 +68,10 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
 
     case ActionType.GET_NEXT_FRAME:
       if (!state.playing && state.cursor < state.frames.length - 1)
-        newState = { ...newState, cursor: state.cursor + 1 };
+        newState = {
+          ...newState,
+          cursor: (state.cursor + 1) % state.frames.length,
+        };
       break;
 
     case ActionType.UPDATE_DURATION:
@@ -89,6 +101,12 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
         startCursor: null,
       };
       break;
+
+    case ActionType.SET_LOOP:
+      newState = {
+        ...newState,
+        loop: action.payload,
+      };
   }
 
   return newState;

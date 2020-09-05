@@ -7,7 +7,8 @@ export type Action<T> =
   | LoadFrames<T>
   | GetPreviousFrame
   | GetNextFrame
-  | SetCursor;
+  | SetCursor
+  | SetLoop;
 
 export enum ActionType {
   LOAD_FRAMES,
@@ -19,6 +20,7 @@ export enum ActionType {
   UPDATE_DURATION,
   CLEAR,
   SET_CURSOR,
+  SET_LOOP,
 }
 
 interface Play {
@@ -60,6 +62,11 @@ interface SetCursor {
   payload: number;
 }
 
+interface SetLoop {
+  type: ActionType.SET_LOOP;
+  payload: boolean;
+}
+
 export const play = (): Play => ({
   type: ActionType.PLAY,
 });
@@ -98,5 +105,10 @@ export const getNextFrame = (): GetNextFrame => ({
 
 export const setCursor = (payload: number): SetCursor => ({
   type: ActionType.SET_CURSOR,
+  payload,
+});
+
+export const setLoop = (payload: boolean): SetLoop => ({
+  type: ActionType.SET_LOOP,
   payload,
 });

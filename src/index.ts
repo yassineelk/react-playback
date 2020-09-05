@@ -11,13 +11,14 @@ import {
   getPreviousFrame,
   getNextFrame,
   setCursor,
+  setLoop,
 } from "./state/actions";
 
 export const usePlayback = <T>(
   frames: T[],
   duration: number,
   autoplay: boolean = false
-): [T | null, boolean, IPlayBack<T>] => {
+): [T | null, boolean, IPlayBack<T>, boolean] => {
   const [state, dispatch] = useReducer(createReducer<T>(), undefined, () =>
     getDefaultState(frames, duration, autoplay)
   );
@@ -28,10 +29,7 @@ export const usePlayback = <T>(
 
     let interval = setInterval(() => {
       const playTime = Date.now() - state.startTime;
-      const newCursor = Math.min(
-        Math.ceil(playTime / frameDuration) + state.startCursor,
-        state.frames.length - 1
-      );
+      const newCursor = Math.ceil(playTime / frameDuration) + state.startCursor;
       dispatch(setCursor(newCursor));
     });
 
@@ -52,6 +50,7 @@ export const usePlayback = <T>(
         pause: () => dispatch(pause()),
         reset: () => dispatch(reset()),
         setDuration: (duration: number) => dispatch(updateDuration(duration)),
+        setLoop: (isLoop: boolean) => dispatch(setLoop(isLoop)),
       }),
       [
         dispatch,
@@ -63,8 +62,10 @@ export const usePlayback = <T>(
         pause,
         reset,
         updateDuration,
+        setLoop,
       ]
     ),
+    state.loop,
   ];
 };
 
@@ -77,4 +78,5 @@ interface IPlayBack<T> {
   pause: () => void;
   reset: () => void;
   setDuration: (duration: number) => void;
+  setLoop: (isLoop: boolean) => void;
 }

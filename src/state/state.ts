@@ -3,6 +3,7 @@ export type Store<T> = {
   frames: T[];
   cursor: number;
   autoplay: boolean;
+  loop: boolean;
 } & (
   | { playing: true; startTime: number; startCursor: number }
   | { playing: false; startTime: null; startCursor: null }
@@ -20,4 +21,5 @@ export const getDefaultState = <T>(
   startTime: null,
   startCursor: null,
   autoplay,
+  loop: false,
 });
