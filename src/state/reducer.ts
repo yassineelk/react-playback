@@ -1,4 +1,3 @@
-import { produce, current } from "immer";
 import { Action, ActionType } from "./actions";
 import { Store } from "./state";
 
@@ -14,7 +13,7 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
           ...newState,
           cursor,
           playing: true,
-          startCursor: state.cursor,
+          startCursor: cursor,
           startTime: Date.now(),
         };
       }
@@ -43,7 +42,7 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
     case ActionType.SET_CURSOR:
       if (!state.playing) break;
       newState = { ...newState, cursor: action.payload };
-      if (newState.cursor === newState.frames.length - 1) {
+      if (newState.cursor >= newState.frames.length - 1) {
         newState = {
           ...newState,
           playing: false,
@@ -63,15 +62,11 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
         newState = { ...newState, cursor: state.cursor + 1 };
       break;
 
-    case ActionType.UPDATE_FPS_LIMIT:
-      if (!state.playing) newState = { ...newState, fpsLimit: action.payload };
-      break;
-
     case ActionType.UPDATE_DURATION:
       if (!state.playing) newState = { ...newState, duration: action.payload };
       break;
 
-    case ActionType.CLEAR_FRAMES:
+    case ActionType.CLEAR:
       newState = {
         ...newState,
         frames: [],
@@ -82,18 +77,17 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
       };
       break;
 
-    case ActionType.PUSH_FRAMES:
-      if (!state.playing)
-        newState = {
-          ...newState,
-          frames: state.frames.length
-            ? produce(state.frames, (draft) => {
-                for (let frame of action.payload) {
-                  (draft as T[]).push(frame);
-                }
-              })
-            : action.payload,
-        };
+    case ActionType.LOAD_FRAMES:
+      newState = {
+        ...newState,
+        frames: action.payload[0],
+        duration: action.payload[1],
+        autoplay: action.payload[2],
+        playing: false,
+        cursor: 0,
+        startTime: null,
+        startCursor: null,
+      };
       break;
   }
 

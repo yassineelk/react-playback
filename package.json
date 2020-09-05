@@ -19,7 +19,6 @@
     "url": "git+https://github.com:yassineelk/react-playback.git"
   },
   "dependencies": {
-    "immer": "^7.0.8",
     "react": "^16.13.1"
   },
   "homepage": "https://github.com:yassineelk/react-playback#readme",

@@ -5,10 +5,9 @@ import {
   play,
   pause,
   reset,
-  updateFps,
   updateDuration,
-  clearFrames,
-  pushFrames,
+  clear,
+  loadFrames,
   getPreviousFrame,
   getNextFrame,
   setCursor,
@@ -16,72 +15,66 @@ import {
 
 export const usePlayback = <T>(
   frames: T[],
-  duration?: number
+  duration: number,
+  autoplay: boolean = false
 ): [T | null, boolean, IPlayBack<T>] => {
   const [state, dispatch] = useReducer(createReducer<T>(), undefined, () =>
-    getDefaultState(frames, duration)
+    getDefaultState(frames, duration, autoplay)
   );
 
   useEffect(() => {
     if (!state.playing) return;
-    const frameDuration = Math.min(
-      1000 / state.fpsLimit,
-      state.duration ? state.duration / state.frames.length : -Infinity
-    );
+    const frameDuration = state.duration / state.frames.length;
 
     let interval = setInterval(() => {
-      const elapsedTime = Date.now() - state.startTime;
+      const playTime = Date.now() - state.startTime;
       const newCursor = Math.min(
-        Math.ceil(elapsedTime / frameDuration) + state.startCursor,
+        Math.ceil(playTime / frameDuration) + state.startCursor,
         state.frames.length - 1
       );
       dispatch(setCursor(newCursor));
-    }, 1);
+    });
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.playing, state.duration, state.fpsLimit, state.frames.length]);
+  }, [state.playing, state.duration, state.frames.length]);
 
   return [
     state.frames[state.cursor],
     state.playing,
     useMemo(
       () => ({
-        getPrev: () => dispatch(getPreviousFrame()),
-        getNext: () => dispatch(getNextFrame()),
+        clear: () => dispatch(clear()),
+        load: (frames: T[], duration: number, autoplay: boolean = false) =>
+          dispatch(loadFrames([frames, duration, autoplay])),
+        getPrevFrame: () => dispatch(getPreviousFrame()),
+        getNextFrame: () => dispatch(getNextFrame()),
         play: () => dispatch(play()),
         pause: () => dispatch(pause()),
         reset: () => dispatch(reset()),
-        setFPS: (fps: number) => dispatch(updateFps(fps)),
         setDuration: (duration: number) => dispatch(updateDuration(duration)),
-        clear: () => dispatch(clearFrames()),
-        pushFrames: (frames: T[]) => dispatch(pushFrames(frames)),
       }),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         dispatch,
+        clear,
+        loadFrames,
         getPreviousFrame,
         getNextFrame,
         play,
         pause,
         reset,
-        updateFps,
         updateDuration,
-        clearFrames,
-        pushFrames,
       ]
     ),
   ];
 };
 
 interface IPlayBack<T> {
-  getPrev: () => void;
-  getNext: () => void;
+  clear: () => void;
+  load: (frames: T[], duration: number, autoplay?: boolean) => void;
+  getPrevFrame: () => void;
+  getNextFrame: () => void;
   play: () => void;
   pause: () => void;
   reset: () => void;
-  setFPS: (fps: number) => void;
   setDuration: (duration: number) => void;
-  clear: () => void;
-  pushFrames: (frames: T[]) => void;
 }

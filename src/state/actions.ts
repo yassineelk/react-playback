@@ -2,24 +2,22 @@ export type Action<T> =
   | Play
   | Pause
   | Reset
-  | UpdateFpsLimit
   | UpdateDuration
-  | ClearFrames
-  | PushFrames<T>
+  | Clear
+  | LoadFrames<T>
   | GetPreviousFrame
   | GetNextFrame
   | SetCursor;
 
 export enum ActionType {
+  LOAD_FRAMES,
+  GET_PREVIOUS_FRAME,
+  GET_NEXT_FRAME,
   PLAY,
   PAUSE,
   RESET,
-  UPDATE_FPS_LIMIT,
   UPDATE_DURATION,
-  CLEAR_FRAMES,
-  PUSH_FRAMES,
-  GET_PREVIOUS_FRAME,
-  GET_NEXT_FRAME,
+  CLEAR,
   SET_CURSOR,
 }
 
@@ -35,23 +33,18 @@ interface Reset {
   type: ActionType.RESET;
 }
 
-interface UpdateFpsLimit {
-  type: ActionType.UPDATE_FPS_LIMIT;
-  payload: number;
-}
-
 interface UpdateDuration {
   type: ActionType.UPDATE_DURATION;
   payload: number;
 }
 
-interface ClearFrames {
-  type: ActionType.CLEAR_FRAMES;
+interface Clear {
+  type: ActionType.CLEAR;
 }
 
-interface PushFrames<T> {
-  type: ActionType.PUSH_FRAMES;
-  payload: T[];
+interface LoadFrames<T> {
+  type: ActionType.LOAD_FRAMES;
+  payload: [T[], number, boolean];
 }
 
 interface GetPreviousFrame {
@@ -79,22 +72,19 @@ export const reset = (): Reset => ({
   type: ActionType.RESET,
 });
 
-export const updateFps = (payload: number): UpdateFpsLimit => ({
-  type: ActionType.UPDATE_FPS_LIMIT,
-  payload,
-});
-
 export const updateDuration = (payload: number): UpdateDuration => ({
   type: ActionType.UPDATE_DURATION,
   payload,
 });
 
-export const clearFrames = (): ClearFrames => ({
-  type: ActionType.CLEAR_FRAMES,
+export const clear = (): Clear => ({
+  type: ActionType.CLEAR,
 });
 
-export const pushFrames = <T>(payload: T[]): PushFrames<T> => ({
-  type: ActionType.PUSH_FRAMES,
+export const loadFrames = <T>(
+  payload: [T[], number, boolean]
+): LoadFrames<T> => ({
+  type: ActionType.LOAD_FRAMES,
   payload,
 });
 

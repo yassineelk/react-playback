@@ -1,10 +1,8 @@
-const DEFAULT_FPS_LIMIT = 30;
-
 export type Store<T> = {
-  fpsLimit: number;
-  duration: number | undefined;
+  duration: number;
   frames: T[];
   cursor: number;
+  autoplay: boolean;
 } & (
   | { playing: true; startTime: number; startCursor: number }
   | { playing: false; startTime: null; startCursor: null }
@@ -12,14 +10,14 @@ export type Store<T> = {
 
 export const getDefaultState = <T>(
   frames: T[] = [],
-  duration?: number,
-  fpsLimit: number = DEFAULT_FPS_LIMIT
+  duration: number,
+  autoplay: boolean = false
 ): Store<T> => ({
-  fpsLimit,
   duration,
   frames,
   cursor: 0,
   playing: false,
   startTime: null,
   startCursor: null,
+  autoplay,
 });
