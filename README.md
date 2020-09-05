@@ -52,15 +52,15 @@ const Wrapper = ({stateArray}) => {
 
 **The library is a react custom hook `usePlayback` which takes 3 parameters :**
 
-1- the array of states you wish to playback
-2- the duration of each playback in milliseconds
-3- a boolean value for whether you want it to autoplay immediately or not
+1. the array of states you wish to playback
+2. the duration of each playback in milliseconds
+3. a boolean value for whether you want it to autoplay immediately or not
 
 **It returns an array containing the following in this order :**
 
-1- the state of the current frame
-2- a boolean representing whether the hook is currently playing the frames
-3- an object containing the following methods that allow you to control your playback and settings:
+1. the state of the current frame
+2. a boolean representing whether the hook is currently playing the frames
+3. an object containing the following methods that allow you to control your playback and settings:
 
 - **clear()** : stops the current playback and removes all frames
 - **load(frames, duration, autoplay = false)** : stops the current playback, it takes the same parameters as the usePlayback hook and loads the frames and settings it is given
@@ -72,4 +72,4 @@ const Wrapper = ({stateArray}) => {
 - **updateDuration()** : if playback is inactive, update the duration parameter of the playback
 - **setLoop(bool)** : set looping setting
 
-4- a boolean representing whethe the isLoop setting of the playback
+4. a boolean representing whethe the isLoop setting of the playback
