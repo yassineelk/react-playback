@@ -6,7 +6,7 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
 
   switch (action.type) {
     case ActionType.PLAY:
-      if (!state.playing) {
+      if (!state.playing && state.frames.length) {
         const cursor =
           state.cursor === state.frames.length - 1 ? 0 : state.cursor;
         newState = {
@@ -40,7 +40,7 @@ export const createReducer = <T>() => (state: Store<T>, action: Action<T>) => {
       break;
 
     case ActionType.SET_CURSOR:
-      if (!state.playing) break;
+      if (!state.playing || !state.frames.length) break;
       newState = { ...newState, cursor: action.payload };
       if (newState.cursor >= newState.frames.length - 1) {
         newState = state.loop

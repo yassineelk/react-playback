@@ -14,13 +14,19 @@ import {
   setLoop,
 } from "./state/actions";
 
-export const usePlayback = <T>(
+export function usePlayback<T>(): [T | null, boolean, IPlayBack<T>, boolean];
+export function usePlayback<T>(
   frames: T[],
   duration: number,
+  autoplay?: boolean
+): [T | null, boolean, IPlayBack<T>, boolean];
+export function usePlayback<T>(
+  frames: T[] = [],
+  duration: number = 0,
   autoplay: boolean = false
-): [T | null, boolean, IPlayBack<T>, boolean] => {
+): [T | null, boolean, IPlayBack<T>, boolean] {
   const [state, dispatch] = useReducer(createReducer<T>(), undefined, () =>
-    getDefaultState(frames, duration, autoplay)
+    getDefaultState(frames, duration > 0 ? duration : 0, autoplay)
   );
 
   useEffect(() => {
@@ -34,16 +40,22 @@ export const usePlayback = <T>(
     });
 
     return () => clearInterval(interval);
-  }, [state.playing, state.duration, state.frames.length]);
+  }, [state.playing, state.cursor]);
 
   return [
-    state.frames[state.cursor],
+    state.frames[state.cursor] || null,
     state.playing,
     useMemo(
       () => ({
         clear: () => dispatch(clear()),
-        load: (frames: T[], duration: number, autoplay: boolean = false) =>
-          dispatch(load([frames, duration, autoplay])),
+        load: (frames: T[], duration: number, autoplay: boolean = false) => {
+          if (frames.length && duration > 0)
+            dispatch(load([frames, duration, autoplay]));
+          else
+            throw new Error(
+              "frames can't be empty and duration must be a positive number"
+            );
+        },
         getPrevFrame: () => dispatch(getPreviousFrame()),
         getNextFrame: () => dispatch(getNextFrame()),
         play: () => dispatch(play()),
@@ -67,7 +79,7 @@ export const usePlayback = <T>(
     ),
     state.loop,
   ];
-};
+}
 
 interface IPlayBack<T> {
   clear: () => void;
